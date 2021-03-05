@@ -153,16 +153,16 @@
       <div id="caseRoles-selector-show-inactive">
         {assign var=check value='Show active relationships'} <!-- label for check box -->
         {if $caseDetails.status_class eq 'Opened'}{assign var=statusclass value='1'}{else}{assign var=statusclass value='0'}{/if} <!-- assign the 0 if the case is closed, this will preselect the checkbox as desired -->
-        {html_checkboxes name='inactive'  options=$check selected=$statusclass}
+        {html_checkboxes name='inactive'  options=$check }
       </div>
       {literal}
         <script type="text/javascript">
             (function($) {
                 $('input[type=checkbox][name*=inactive]').change(function() {
                     if (this.checked == false) {
-                        CRM.$('[id^=caseRoles-selector] tr.disabled').css('display','none');
+                        CRM.$('[id^=caseRoles-selector] tr.disabled').css('display', '');
                     } else if (this.checked == true) {
-                        CRM.$('[id^=caseRoles-selector] tr.disabled').css('display','');
+                        CRM.$('[id^=caseRoles-selector] tr.disabled').css('display','none');
                     }
                 });
             })(CRM.$);
