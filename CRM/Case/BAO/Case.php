@@ -810,7 +810,6 @@ SELECT civicrm_case.id, case_status.label AS case_status, status_id, civicrm_cas
       $query .= " ORDER BY $sortBy ";
     }
 
-
     $page = $caseParams['page'] ?? NULL;
     $rp = $caseParams['rp'] ?? NULL;
 
