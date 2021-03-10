@@ -186,18 +186,12 @@
         <script type="text/javascript">
           (function($) {
             var caseId = {/literal}{$caseID}{literal};
-              var statusClass = {/literal}{if $caseDetails.status_class eq 'Opened'}'1'{else}'0'{/if}{literal};
               CRM.$('table#caseRoles-selector-' + caseId).data({
               "ajax": {
                 "url": {/literal}'{crmURL p="civicrm/ajax/caseroles" h=0 q="snippet=4&caseID=$caseId&cid=$contactID&userID=$userID"}'{literal},
                 "complete" : function(){
-                  if (statusClass == 1) {
+                  if (CRM.$('input[type=checkbox][id=role_active]').prop('checked')) {
                     CRM.$('[id^=caseRoles-selector] tr.disabled').hide();
-                  }
-                  if (!$('[id^=caseRoles-selector] tr').hasClass("disabled")) {
-                    $('input[type=checkbox][id=role_active]').prop('disabled', true);
-                    // only show checkbox when there are disabled roles associated with case
-                    $('#caseRoles-selector-show-active').hide();
                   }
                 }
               }

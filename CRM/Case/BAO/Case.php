@@ -764,12 +764,13 @@ SELECT civicrm_case.id, case_status.label AS case_status, status_id, civicrm_cas
    *   Case id.
    * @param int $relationshipID
    * @param bool $activeOnly
+   * @param array $caseParams
    *
    * @return array
    *   case role / relationships
    *
    */
-  public static function getCaseRoles($contactID, $caseID, $relationshipID = NULL, $activeOnly = TRUE) {
+  public static function getCaseRoles($contactID, $caseID, $relationshipID = NULL, $activeOnly = TRUE, $caseParams = []) {
     $query = '
     SELECT  rel.id as civicrm_relationship_id,
             con.sort_name as sort_name,
@@ -802,6 +803,25 @@ SELECT civicrm_case.id, case_status.label AS case_status, status_id, civicrm_cas
       $query .= ' AND rel.id = %3 ';
       $params[3] = [$relationshipID, 'Integer'];
     }
+
+    $sortBy = $caseParams['sortBy'] ?? NULL;
+    if ($sortBy) {
+      $sortBy = CRM_Utils_Type::escape($sortBy, 'String');
+      $query .= " ORDER BY $sortBy ";
+    }
+
+
+    $page = $caseParams['page'] ?? NULL;
+    $rp = $caseParams['rp'] ?? NULL;
+
+    if (!$page) {
+      $page = 1;
+    }
+    if (!$rp) {
+      $rp = 10;
+    }
+    $start = (($page - 1) * $rp);
+    $query .= " LIMIT $start, $rp";
     $dao = CRM_Core_DAO::executeQuery($query, $params);
 
     $values = [];

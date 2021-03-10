@@ -136,7 +136,7 @@ class CRM_Activity_Page_AJAX {
 
     $params = CRM_Core_Page_AJAX::defaultSortAndPagerParams();
 
-    $caseRelationships = CRM_Case_BAO_Case::getCaseRoles($contactID, $caseID, NULL, FALSE);
+    $caseRelationships = CRM_Case_BAO_Case::getCaseRoles($contactID, $caseID, NULL, FALSE, $params);
     $caseTypeName = CRM_Case_BAO_Case::getCaseType($caseID, 'name');
     $xmlProcessor = new CRM_Case_XMLProcessor_Process();
     $caseRoles = $xmlProcessor->get($caseTypeName, 'CaseRoles');
