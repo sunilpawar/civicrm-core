@@ -221,7 +221,7 @@ class CRM_Activity_Page_AJAX {
 
       // view end date if set
       if (!empty($row['end_date'])) {
-        $row['end_date'] = date("F d, Y", strtotime($row['end_date']));
+        $row['end_date'] = CRM_Utils_Date::customFormat($row['end_date']);
         // add disabled class if end date is less than equal to current date.
         if (CRM_Utils_Date::overdue($row['end_date'])) {
           $row['DT_RowClass'] = 'disabled';

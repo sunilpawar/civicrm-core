@@ -150,19 +150,19 @@
         <div><label for="edit_role_contact_id">{ts}Change To{/ts}:</label></div>
         <div><input name="edit_role_contact_id" placeholder="{ts}- select contact -{/ts}" class="huge" /></div>
       </div>
-      <div id="caseRoles-selector-show-inactive">
-        {assign var=check value='Show active relationships'} <!-- label for check box -->
-        {if $caseDetails.status_class eq 'Opened'}{assign var=statusclass value='1'}{else}{assign var=statusclass value='0'}{/if} <!-- assign the 0 if the case is closed, this will preselect the checkbox as desired -->
-        {html_checkboxes name='inactive'  options=$check }
+      <div id="caseRoles-selector-show-active">
+        {* add checkbox to show only active role on case, default value is unchecked (it show all roles) *}
+        <label><input type="checkbox" id="role_active" name="role_active[]">{ts}Show active relationships{/ts}</label>
       </div>
       {literal}
         <script type="text/javascript">
             (function($) {
-                $('input[type=checkbox][name*=inactive]').change(function() {
+                // hide the inactive role when checkbox is checked
+                $('input[type=checkbox][id=role_active]').change(function() {
                     if (this.checked == false) {
-                        CRM.$('[id^=caseRoles-selector] tr.disabled').css('display', '');
+                        CRM.$('[id^=caseRoles-selector] tr.disabled').show();
                     } else if (this.checked == true) {
-                        CRM.$('[id^=caseRoles-selector] tr.disabled').css('display','none');
+                        CRM.$('[id^=caseRoles-selector] tr.disabled').hide();
                     }
                 });
             })(CRM.$);
@@ -186,19 +186,18 @@
         <script type="text/javascript">
           (function($) {
             var caseId = {/literal}{$caseID}{literal};
-              var statusClass = {/literal}{$statusclass}{literal};
+              var statusClass = {/literal}{if $caseDetails.status_class eq 'Opened'}'1'{else}'0'{/if}{literal};
               CRM.$('table#caseRoles-selector-' + caseId).data({
               "ajax": {
                 "url": {/literal}'{crmURL p="civicrm/ajax/caseroles" h=0 q="snippet=4&caseID=$caseId&cid=$contactID&userID=$userID"}'{literal},
                 "complete" : function(){
                   if (statusClass == 1) {
-                    CRM.$('[id^=caseRoles-selector] tr.disabled').css('display','none');
+                    CRM.$('[id^=caseRoles-selector] tr.disabled').hide();
                   }
                   if (!$('[id^=caseRoles-selector] tr').hasClass("disabled")) {
-                    $('#show-inactive label').addClass('disabled');
-                    $('input[type=checkbox][name*=inactive]').prop('disabled', true);
+                    $('input[type=checkbox][id=role_active]').prop('disabled', true);
                     // only show checkbox when there are disabled roles associated with case
-                    $('#caseRoles-selector-show-inactive').hide();
+                    $('#caseRoles-selector-show-active').hide();
                   }
                 }
               }
